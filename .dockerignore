@@ -1,0 +1,13 @@
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/.git
+**/.env
+**/data
+maquette
+upstream
+tools
+tests
+*.md
+!NOTICE.md

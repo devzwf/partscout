@@ -1,0 +1,63 @@
+PartScout - non-commercial licence
+
+Copyright (c) 2026 devzwf (PartScout's own code)
+Copyright (c) 2026 Ian Johnston (code taken from the original work, see below)
+
+PartScout is a web version derived from Win-PartsFinder, Mac-PartsFinder and
+Linux-PartsFinder by Ian Johnston:
+
+  https://www.ianjohnston.com
+  https://github.com/Ian-Johnston/WinPartsFinder
+  https://github.com/Ian-Johnston/MacPartsFinder
+  https://github.com/Ian-Johnston/LinuxPartsFinder
+
+Code taken from the original work: the `upstream/` folder and
+`backend/src/PartScout.Suppliers/`. It remains subject to Ian Johnston's
+non-commercial restrictions. The same terms apply to all of PartScout, so that
+one rule covers the whole project.
+
+
+1. Permitted use
+
+PartScout is provided free of charge for personal, non-commercial use only.
+
+The source code may be used, modified and redistributed for non-commercial
+purposes only. Keep this licence, the copyright notices above and the link to
+the original project in anything you redistribute.
+
+
+2. Commercial use
+
+Neither PartScout nor its source code, in whole or in part, may be used for
+commercial purposes, including use within businesses and organisations, without
+a separate commercial licence.
+
+For the code taken from the original work, that licence comes from Ian Johnston:
+contact him via https://www.ianjohnston.com. For PartScout's own code, contact
+devzwf.
+
+
+3. Names and icons
+
+The Win-PartsFinder (WinPartsFinder) name and icon belong to Ian Johnston.
+Modified or derived versions must not be called Win-PartsFinder or
+WinPartsFinder, or use a name or icon likely to be confused with it, without his
+written permission.
+
+
+4. Supplier API keys
+
+Each user must obtain their own supplier API keys and follow each supplier's API
+terms of use.
+
+
+5. Disclaimer
+
+PartScout and its source code are provided "as is", without warranty of any kind,
+express or implied. Use is entirely at your own risk.
+
+Prices, stock levels and other part data come from third parties and may be out
+of date or wrong: always check with the supplier before ordering.
+
+Supplier names and trademarks belong to their respective owners. PartScout is not
+affiliated with or endorsed by any supplier, or by Ian Johnston.

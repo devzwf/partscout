@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/PartScout.Suppliers/PartScout.Suppliers.csproj" />
+  <Project Path="src/PartScout.Api/PartScout.Api.csproj" />
+  <Project Path="tests/PartScout.Tests/PartScout.Tests.csproj" />
+</Solution>

@@ -1,0 +1,17 @@
+# HTTPS devant PartScout. Le certificat vient de fichiers, renouvelés hors de Caddy : pas d'ACME ici.
+# Le port 80 redirige vers le HTTPS.
+{
+	auto_https disable_certs
+	admin off
+}
+
+{$PARTSCOUT_DOMAIN} {
+	tls /certs/fullchain.pem /certs/privkey.pem
+
+	header Strict-Transport-Security "max-age=31536000"
+
+	reverse_proxy partscout:8080 {
+		# Les résultats arrivent en flux, fournisseur par fournisseur : ne rien retenir.
+		flush_interval -1
+	}
+}

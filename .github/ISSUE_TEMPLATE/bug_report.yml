@@ -1,0 +1,66 @@
+name: Bug report
+description: Something does not work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. English or French, both are fine.
+        **Never paste API keys, passwords, the `.env` file or the setup token.** For a security issue, do not open an issue: see SECURITY.md.
+  - type: input
+    id: version
+    attributes:
+      label: PartScout version
+      description: Shown next to the logo, top left (for example v0.1.4), or the image tag you run.
+      placeholder: "0.1.4"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How do you run it?
+      options:
+        - docker compose (published image)
+        - docker compose (image built locally)
+        - Unraid template
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: suppliers
+    attributes:
+      label: Suppliers involved
+      options:
+        - label: DigiKey
+        - label: Mouser
+        - label: element14 / Newark / Farnell
+        - label: TME
+        - label: Not supplier-specific
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Search mode
+      options:
+        - Keywords
+        - Supplier part number
+        - Advanced search
+        - Load more
+        - Not search-related (BOM, settings, accounts…)
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, what you got. The search terms help a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: "Output of `docker logs partscout`, around the time of the problem. Check it holds no key before posting."
+      render: text
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and system
+      placeholder: "Firefox 140, Windows 11"

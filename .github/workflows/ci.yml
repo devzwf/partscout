@@ -1,0 +1,45 @@
+name: PartScout CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  test:
+    name: API, interface et parcours navigateur
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # Selon le runner, l'image de ubuntu-latest n'a pas Docker (node:20-bookworm) : seul le client manque, le démon est celui de l'hôte.
+      - name: Client Docker
+        run: |
+          if ! command -v docker > /dev/null || ! docker buildx version > /dev/null 2>&1; then
+            apt-get update -qq
+            apt-get install -y -qq ca-certificates curl > /dev/null
+            install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+            chmod a+r /etc/apt/keyrings/docker.asc
+            . /etc/os-release
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian ${VERSION_CODENAME} stable" \
+              > /etc/apt/sources.list.d/docker.list
+            apt-get update -qq
+            apt-get install -y -qq docker-ce-cli docker-buildx-plugin > /dev/null
+          fi
+          docker version --format 'client {{.Client.Version}}, serveur {{.Server.Version}}'
+
+      - name: Tests de l'API
+        run: docker build --target backend-test -t "partscout-ci-backend:${GITHUB_RUN_ID}" .
+
+      # Le build de l'image lance aussi les tests de l'interface et la compilation TypeScript.
+      - name: Image et tests de l'interface
+        run: docker build --build-arg VERSION="$(cat VERSION)" --build-arg REVISION="${GITHUB_SHA::7}" -t "partscout-ci:${GITHUB_RUN_ID}" .
+
+      - name: Parcours navigateur sur une démo jetable
+        run: tools/ci-e2e.sh "partscout-ci:${GITHUB_RUN_ID}"
+
+      - name: Nettoyage des images
+        if: always()
+        run: docker rmi -f "partscout-ci:${GITHUB_RUN_ID}" "partscout-ci-backend:${GITHUB_RUN_ID}" >/dev/null 2>&1 || true

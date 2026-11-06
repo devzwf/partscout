@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "description": ".NET stays on the 10 LTS (SDK and runtime images, packages versioned with the framework): moving to 11 is done by hand, all together.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["mcr.microsoft.com/dotnet/**"],
+      "allowedVersions": "<11"
+    },
+    {
+      "description": "NuGet packages versioned with the framework: same rule.",
+      "matchDatasources": ["nuget"],
+      "matchPackageNames": ["Microsoft.AspNetCore.**", "Microsoft.Data.Sqlite", "Microsoft.Extensions.**"],
+      "allowedVersions": "<11"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+name: Feature request
+description: An idea to make PartScout more useful.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        English or French, both are fine. PartScout is a personal, non-commercial project maintained in spare time: requests are welcome, with no promise of a date.
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you need?
+      description: The problem first, then the solution you have in mind, if any.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: A part number, a supplier, a screenshot of how another tool does it…
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Terms
+      options:
+        - label: I understand that PartScout is for personal, non-commercial use (see LICENSE).
+          required: true

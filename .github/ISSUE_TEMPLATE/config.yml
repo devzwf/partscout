@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security problem
+    url: https://github.com/devzwf/partscout/blob/main/SECURITY.md
+    about: Please report it privately, not in a public issue.
+  - name: Commercial use or licence of the original code
+    url: https://www.ianjohnston.com
+    about: Commercial licences for the code taken from Win-PartsFinder are a matter for its author, Ian Johnston.

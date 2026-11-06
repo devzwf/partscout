@@ -1,0 +1,16 @@
+# Secrets et données locales
+.env
+data/
+*.db
+*.db-*
+# .NET
+bin/
+obj/
+# Node
+node_modules/
+dist/
+test-results/
+playwright-report/
+# Divers
+__pycache__/
+.vscode/

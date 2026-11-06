@@ -1,0 +1,71 @@
+# Uses the published image devzwf/partscout. To run an image you built yourself (tools/build-image.sh),
+# set PARTSCOUT_IMAGE=partscout and PARTSCOUT_PULL_POLICY=never in .env.
+# Real instance:  docker compose up -d                      → http://host:5070
+# Demo (made-up):  docker compose --profile demo up -d demo → http://host:5071
+# Avoid 5060 and 5061: browsers block these ports (SIP).
+x-durci: &durci
+  image: ${PARTSCOUT_IMAGE:-devzwf/partscout}:${PARTSCOUT_VERSION:?set the version in .env, see .env.example}
+  pull_policy: ${PARTSCOUT_PULL_POLICY:-missing}
+  restart: unless-stopped
+  read_only: true
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+
+services:
+  partscout:
+    <<: *durci
+    container_name: partscout
+    # Behind Caddy: PARTSCOUT_PUBLISH=127.0.0.1:5070, so plain HTTP is no longer exposed to the network.
+    ports: ["${PARTSCOUT_PUBLISH:-5070}:8080"]
+    environment:
+      PARTSCOUT_MASTER_KEY: ${PARTSCOUT_MASTER_KEY:?create the .env file, see .env.example}
+      PARTSCOUT_SETUP_TOKEN: ${PARTSCOUT_SETUP_TOKEN:?create the .env file, see .env.example}
+      PARTSCOUT_TRUSTED_PROXY: 172.30.57.2 # Caddy, the only source trusted for X-Forwarded-*
+    # Set PARTSCOUT_DATA_PATH to keep the data in a folder that gets backed up. See .env.example.
+    volumes: ["${PARTSCOUT_DATA_PATH:-partscout-data}:/data"]
+
+  demo:
+    <<: *durci
+    profiles: [demo]
+    container_name: partscout-demo
+    ports: ["5071:8080"]
+    environment:
+      PARTSCOUT_DEMO: "1"
+    volumes: ["partscout-demo-data:/data"]
+
+  # HTTPS: docker compose --profile https up -d. See README.
+  caddy:
+    profiles: [https]
+    image: caddy:2.11.9-alpine
+    container_name: partscout-caddy
+    restart: unless-stopped
+    depends_on: [partscout]
+    user: "${PARTSCOUT_CERT_UID:-1000}:${PARTSCOUT_CERT_UID:-1000}" # must be able to read the private key
+    read_only: true
+    tmpfs:
+      - /data:uid=${PARTSCOUT_CERT_UID:-1000},gid=${PARTSCOUT_CERT_UID:-1000}
+      - /config:uid=${PARTSCOUT_CERT_UID:-1000},gid=${PARTSCOUT_CERT_UID:-1000}
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      PARTSCOUT_DOMAIN: ${PARTSCOUT_DOMAIN:-}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${PARTSCOUT_CERT_DIR:-./certs}:/certs:ro
+    networks:
+      default:
+        ipv4_address: 172.30.57.2
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.30.57.0/24
+          # Automatic addresses kept apart, or another container could take Caddy's.
+          ip_range: 172.30.57.128/25
+
+volumes:
+  partscout-data:
+  partscout-demo-data:
