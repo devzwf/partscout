@@ -22,6 +22,7 @@ services:
       PARTSCOUT_MASTER_KEY: ${PARTSCOUT_MASTER_KEY:?create the .env file, see .env.example}
       PARTSCOUT_SETUP_TOKEN: ${PARTSCOUT_SETUP_TOKEN:?create the .env file, see .env.example}
       PARTSCOUT_TRUSTED_PROXY: 172.30.57.2 # Caddy, the only source trusted for X-Forwarded-*
+      PARTSCOUT_COOKIE_SECURE: ${PARTSCOUT_COOKIE_SECURE:-auto} # always behind HTTPS, see .env.example
     # Set PARTSCOUT_DATA_PATH to keep the data in a folder that gets backed up. See .env.example.
     volumes: ["${PARTSCOUT_DATA_PATH:-partscout-data}:/data"]
 
@@ -37,7 +38,8 @@ services:
   # HTTPS: docker compose --profile https up -d. See README.
   caddy:
     profiles: [https]
-    image: caddy:2.11.9-alpine
+    # Pinned by digest: a tag alone can be republished. Renovate updates both together.
+    image: caddy:2.11.9-alpine@sha256:0bbb055bda6793c999bde78b1b5ce3e89f829fb031af2cf50056ea1246559fee
     container_name: partscout-caddy
     restart: unless-stopped
     depends_on: [partscout]

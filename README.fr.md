@@ -41,7 +41,7 @@ Sauvegarder le dossier de données **et** le fichier `.env` : sans la clé maît
 
 **Restaurer :** arrêter le conteneur, retirer `partscout.db`, `partscout.db-wal` et `partscout.db-shm`, copier `backups/partscout-AAAA-MM-JJ.db` en `partscout.db` (propriétaire uid 1654), redémarrer. Ne pas utiliser les ports 5060 et 5061, bloqués par les navigateurs.
 
-**HTTPS :** `docker compose --profile https up -d` ajoute Caddy devant l'application. Il sert les fichiers de certificat de `PARTSCOUT_CERT_DIR` et n'en demande pas lui-même : les renouveler avec son propre outil, puis redémarrer `partscout-caddy`. Voir `.env.example`. Ensuite, mettre `PARTSCOUT_PUBLISH=127.0.0.1:5070`.
+**HTTPS :** `docker compose --profile https up -d` ajoute Caddy devant l'application. Il sert les fichiers de certificat de `PARTSCOUT_CERT_DIR` et n'en demande pas lui-même : les renouveler avec son propre outil, puis redémarrer `partscout-caddy`. Voir `.env.example`. Ensuite, mettre `PARTSCOUT_PUBLISH=127.0.0.1:5070` et `PARTSCOUT_COOKIE_SECURE=always`, pour que le cookie de session ne passe jamais en HTTP clair. Garder la valeur par défaut (`auto`) seulement pour du HTTP simple sur le réseau local.
 
 ## Mettre à jour
 Mettre la nouvelle version dans `PARTSCOUT_VERSION` (`.env`), puis `docker compose up -d`. Pour revenir en arrière, remettre l'ancienne valeur. Les changements sont dans [CHANGELOG.md](CHANGELOG.md).

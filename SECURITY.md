@@ -12,5 +12,5 @@ Only the latest release receives fixes.
 
 ## Good practice
 - Keep `.env` private (`chmod 600`) and back it up: without the master key, the stored API keys cannot be read.
-- Use HTTPS as soon as anyone else signs in, or passwords and keys travel in clear text over the network.
+- Use HTTPS as soon as anyone else signs in, or passwords and keys travel in clear text over the network. Behind HTTPS, set `PARTSCOUT_COOKIE_SECURE=always`.
 - Each user brings their own supplier API keys: do not share an instance publicly on yours.

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using PartScout.Api.Infrastructure;
 
 namespace PartScout.Tests;
@@ -85,4 +86,25 @@ public class SecretsTests
     [InlineData("", "")]
     [InlineData(null, "")]
     public void Seuls_http_et_https_passent(string? input, string expected) => Assert.Equal(expected, Safe.Url(input));
+
+    [Theory]
+    [InlineData("http://img.test/a.jpg", "https://img.test/a.jpg")]
+    [InlineData("HTTP://img.test/a.jpg", "https://img.test/a.jpg")]
+    [InlineData("https://img.test/a.jpg", "https://img.test/a.jpg")]
+    [InlineData("//img.test/a.jpg", "https://img.test/a.jpg")]
+    [InlineData("javascript:alert(1)", "")]
+    public void Les_images_passent_en_https(string input, string expected) => Assert.Equal(expected, Safe.ImageUrl(input));
+
+    [Theory]
+    [InlineData("PARTSCOUT_SETUP_TOKEN", "change-me")]
+    [InlineData("PARTSCOUT_MASTER_KEY", "change-me-change-me-change-me-change-me")]
+    public void Les_valeurs_d_exemple_sont_refusees(string name, string value)
+    {
+        var values = new Dictionary<string, string?>
+        {
+            ["PARTSCOUT_MASTER_KEY"] = TestApp.MasterKey, ["PARTSCOUT_SETUP_TOKEN"] = "un-vrai-jeton-aleatoire", [name] = value
+        };
+        var config = new ConfigurationBuilder().AddInMemoryCollection(values).Build();
+        Assert.Throws<InvalidOperationException>(() => AppOptions.FromEnvironment(config));
+    }
 }

@@ -11,8 +11,8 @@ body:
     id: version
     attributes:
       label: PartScout version
-      description: Shown next to the logo, top left (for example v0.1.5), or the image tag you run.
-      placeholder: "0.1.5"
+      description: Shown next to the logo, top left (for example v0.1.6), or the image tag you run.
+      placeholder: "0.1.6"
     validations:
       required: true
   - type: dropdown

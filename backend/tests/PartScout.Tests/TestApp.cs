@@ -1,6 +1,8 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using PartScout.Api.Demo;
 using PartScout.Suppliers;
 
@@ -18,7 +20,10 @@ public sealed class TestApp : IDisposable
 
     public const string MasterKey = "cle-maitresse-de-test-assez-longue-0123456789"; // gitleaks:allow (clé fictive des tests)
 
-    public TestApp(bool demo = true, string? setupToken = null, Action<string>? seed = null)
+    /// <summary>L'horloge vue par l'app : les tests la font avancer.</summary>
+    public ManualTime Clock { get; } = new();
+
+    public TestApp(bool demo = true, string? setupToken = null, Action<string>? seed = null, string? cookieSecure = null)
     {
         seed?.Invoke(DataDir);
         Environment.SetEnvironmentVariable("PARTSCOUT_DATA", DataDir);
@@ -26,9 +31,11 @@ public sealed class TestApp : IDisposable
         Environment.SetEnvironmentVariable("PARTSCOUT_DEMO_FAST", "1");
         Environment.SetEnvironmentVariable("PARTSCOUT_MASTER_KEY", MasterKey);
         Environment.SetEnvironmentVariable("PARTSCOUT_SETUP_TOKEN", setupToken);
+        Environment.SetEnvironmentVariable("PARTSCOUT_COOKIE_SECURE", cookieSecure);
         WebHelper.Client = new HttpClient(new DemoHandler { Slow = false });
-        _factory = new WebApplicationFactory<Program>();
-        Http = _factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(b =>
+            b.ConfigureTestServices(s => s.AddSingleton<TimeProvider>(Clock)));
+        Http = NewClient();
     }
 
     public async Task<TestApp> LoggedInAsync()
@@ -37,8 +44,16 @@ public sealed class TestApp : IDisposable
         return this;
     }
 
-    /// <summary>Un autre navigateur : ses cookies à lui.</summary>
-    public HttpClient NewClient() => _factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+    /// <summary>Un autre navigateur : ses cookies à lui. Il envoie X-PartScout, comme l'interface.</summary>
+    public HttpClient NewClient()
+    {
+        var client = BareClient();
+        client.DefaultRequestHeaders.Add("X-PartScout", "1");
+        return client;
+    }
+
+    /// <summary>Un client sans X-PartScout : ce que peut faire une page d'un autre site.</summary>
+    public HttpClient BareClient() => _factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
 
     /// <summary>Crée un compte (connecté en administrateur sur Http) et renvoie un navigateur connecté sous ce compte.</summary>
     public async Task<HttpClient> AddUserAsync(string name, string password = Password)
@@ -65,6 +80,14 @@ public sealed class TestApp : IDisposable
         Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
         try { Directory.Delete(DataDir, true); } catch (IOException) { }
     }
+}
+
+/// <summary>Horloge réglable à la main.</summary>
+public sealed class ManualTime : TimeProvider
+{
+    private DateTimeOffset _now = DateTimeOffset.UtcNow;
+    public override DateTimeOffset GetUtcNow() => _now;
+    public void Advance(TimeSpan by) => _now += by;
 }
 
 public static class Events

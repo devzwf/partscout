@@ -210,8 +210,8 @@ public sealed class UserSearch
         {
             p.ProductUrl = Safe.Url(p.ProductUrl);
             p.DatasheetUrl = Safe.Url(p.DatasheetUrl);
-            p.ImageUrl = Safe.Url(p.ImageUrl);
-            p.LargeImageUrl = Safe.Url(p.LargeImageUrl);
+            p.ImageUrl = Safe.ImageUrl(p.ImageUrl);
+            p.LargeImageUrl = Safe.ImageUrl(p.LargeImageUrl);
         }
         var next = offset + size;
         var more = s.CanLoadMore(mode) && (found.TotalAvailable is { } total ? next < total : found.Parts.Count >= size);

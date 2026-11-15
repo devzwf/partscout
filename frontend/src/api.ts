@@ -12,7 +12,8 @@ async function request(method: string, path: string, body?: unknown, signal?: Ab
   const res = await fetch('/api' + path, {
     method,
     signal,
-    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    // X-PartScout : exigé par le serveur sur toute écriture (protection CSRF).
+    headers: body === undefined ? { 'X-PartScout': '1' } : { 'Content-Type': 'application/json', 'X-PartScout': '1' },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
   if (res.ok) return res

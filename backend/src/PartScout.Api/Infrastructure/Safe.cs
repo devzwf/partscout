@@ -13,6 +13,16 @@ public static partial class Safe
             ? u : "";
     }
 
+    /// <summary>
+    /// Comme Url, mais une image en http:// passe en https:// : la page est servie en HTTPS et la CSP (img-src https:)
+    /// bloquerait de toute façon une image en clair. Les liens, eux, gardent leur schéma : ils s'ouvrent dans un autre onglet.
+    /// </summary>
+    public static string ImageUrl(string? url)
+    {
+        var u = Url(url);
+        return u.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ? "https://" + u[7..] : u;
+    }
+
     /// <summary>Retire les clés d'un message d'erreur : valeurs connues, et paramètres de clé dans une URL.</summary>
     public static string Scrub(string? message, IEnumerable<string> secrets)
     {

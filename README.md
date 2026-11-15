@@ -41,7 +41,7 @@ Back up the data folder **and** the `.env` file: without the master key, you hav
 
 **Restoring:** stop the container, remove `partscout.db`, `partscout.db-wal` and `partscout.db-shm`, copy `backups/partscout-YYYY-MM-DD.db` to `partscout.db` (owner uid 1654), then start it again. Do not use ports 5060 and 5061: browsers block them.
 
-**HTTPS:** `docker compose --profile https up -d` adds Caddy in front of the app. It serves the certificate files found in `PARTSCOUT_CERT_DIR` and does not request certificates itself, so renew them with your own tool and restart `partscout-caddy` afterwards. See `.env.example`. Then set `PARTSCOUT_PUBLISH=127.0.0.1:5070`.
+**HTTPS:** `docker compose --profile https up -d` adds Caddy in front of the app. It serves the certificate files found in `PARTSCOUT_CERT_DIR` and does not request certificates itself, so renew them with your own tool and restart `partscout-caddy` afterwards. See `.env.example`. Then set `PARTSCOUT_PUBLISH=127.0.0.1:5070` and `PARTSCOUT_COOKIE_SECURE=always`, so the session cookie is never sent over plain HTTP. Keep the default (`auto`) only for plain HTTP on a local network.
 
 ## Upgrading
 Put the new version in `PARTSCOUT_VERSION` (`.env`), then `docker compose up -d`. To go back, restore the old value. Changes are listed in [CHANGELOG.md](CHANGELOG.md).

@@ -2,6 +2,18 @@
 
 All notable changes to PartScout. Versions follow the `VERSION` file and the image tags of `devzwf/partscout`.
 
+## 0.1.6 — 2026-11-14
+
+Security hardening, after an audit.
+- **Behind HTTPS, set `PARTSCOUT_COOKIE_SECURE=always`** in `.env`: the session cookie is then never sent over plain HTTP. The default (`auto`) keeps plain HTTP working on a local network.
+- Protection against cross-site requests: the API refuses any change that does not come from the PartScout interface. A browser tab left open on the previous version will ask you to reload the page.
+- A sign-in lasts at most 90 days, even when used every day. **Everyone has to sign in again once after upgrading.**
+- Request size limits (64 KB, 1 MB for BOMs).
+- The app refuses to start if `PARTSCOUT_MASTER_KEY` or `PARTSCOUT_SETUP_TOKEN` still holds the example value `change-me`.
+- Supplier images given in `http://` are loaded over `https://`.
+- Clear message, and exit code 1, when the data folder is not writable (on a host folder: `chown -R 1654:1654`).
+- Caddy image pinned by digest.
+
 ## 0.1.5 — 2026-11-08
 
 - First public release. Same application as 0.1.4, with the new logo.
