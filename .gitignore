@@ -1,5 +1,6 @@
 # Secrets et données locales
 .env
+.env.bak*
 data/
 *.db
 *.db-*

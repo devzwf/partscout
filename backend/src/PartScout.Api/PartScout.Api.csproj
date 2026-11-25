@@ -8,7 +8,7 @@
     <Version>0.1.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.15" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../PartScout.Suppliers/PartScout.Suppliers.csproj" />

@@ -2,6 +2,11 @@
 
 All notable changes to PartScout. Versions follow the `VERSION` file and the image tags of `devzwf/partscout`.
 
+## 0.1.7 — 2026-11-25
+
+- Sign-out button in the top bar (power icon, the user name shows on hover). Signing out from the settings still works.
+- Dependency updates: Microsoft.Data.Sqlite 10.0.15, Caddy 2.11.9 image refreshed (new digest), Vite 8.3.8, @vitejs/plugin-react 6.3.0, test tooling.
+
 ## 0.1.6 — 2026-11-14
 
 Security hardening, after an audit.

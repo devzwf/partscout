@@ -302,6 +302,9 @@ function Main({ user, onLogout }: { user: AuthUser; onLogout: () => void }) {
         <button className="btn" onClick={() => setShowSettings(true)} aria-label={t('top.settings')} title={t('top.settings')}>⚙</button>
         <button className="btn lang-switch" title={t('lang.switch')} aria-label={t('lang.switch')} onClick={() => { const l = otherLang(); api.setLanguage(l).catch(() => {}).finally(() => changeLang(l)) }}>{otherLang().toUpperCase()}</button>
         <button className="btn" onClick={() => setTheme(t => (t === 'dark' ? 'light' : 'dark'))} aria-label={t('top.theme')} title={t('top.theme')}>◐</button>
+        <button className="btn logout" onClick={onLogout} aria-label={t('top.logout', { name: user.name })} title={t('top.logout', { name: user.name })}>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 3v8" /><path d="M6.3 7.2a8 8 0 1 0 11.4 0" /></svg>
+        </button>
       </header>
 
       {search.suppliers.length > 0 && (

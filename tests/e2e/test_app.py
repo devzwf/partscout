@@ -327,9 +327,8 @@ async def main():
         await page.set_viewport_size({"width": 1440, "height": 900})
         ok("thème clair, mobile sans débordement")
 
-        # ---- Déconnexion ----
-        await page.click('button[aria-label="Réglages"]')
-        await page.click("text=Se déconnecter")
+        # ---- Déconnexion (bouton de la barre du haut) ----
+        await page.click('header.top button.logout')
         await expect(page.locator(".login form")).to_be_visible()
         await page.fill('input[type=password]', "faux-mot-de-passe")
         await page.click('button:has-text("Se connecter")')
@@ -337,7 +336,16 @@ async def main():
         await page.fill('input[type=password]', PASSWORD)
         await page.click('button:has-text("Se connecter")')
         await expect(page.locator(".top")).to_be_visible()
-        ok("déconnexion, mauvais mot de passe, reconnexion")
+        ok("déconnexion par la barre, mauvais mot de passe, reconnexion")
+
+        # ---- Déconnexion par les réglages (toujours possible) ----
+        await page.click('button[aria-label="Réglages"]')
+        await page.click("text=Se déconnecter")
+        await expect(page.locator(".login form")).to_be_visible()
+        await page.fill('input[type=password]', PASSWORD)
+        await page.click('button:has-text("Se connecter")')
+        await expect(page.locator(".top")).to_be_visible()
+        ok("déconnexion par les réglages")
 
         problems = [x for x in problems if "401" not in x and "status of 400" not in x]
         assert not problems, problems

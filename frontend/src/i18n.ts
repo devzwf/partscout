@@ -47,6 +47,7 @@ const fr = {
   'top.advanced': 'Avancée',
   'top.settings': 'Réglages',
   'top.theme': 'Changer de thème',
+  'top.logout': 'Se déconnecter ({name})',
 
   'filter.label': 'Filtres',
   'filter.title': 'Filtrer',
@@ -331,6 +332,7 @@ const en: Record<Key, string> = {
   'top.advanced': 'Advanced',
   'top.settings': 'Settings',
   'top.theme': 'Change theme',
+  'top.logout': 'Sign out ({name})',
 
   'filter.label': 'Filters',
   'filter.title': 'Filter',
